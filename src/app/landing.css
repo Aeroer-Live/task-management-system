@@ -1,0 +1,132 @@
+/* Landing Page Specific Animations */
+
+/* Glowing orb animations */
+@keyframes pulse-glow-landing {
+  0%, 100% { 
+    opacity: 0.3; 
+    transform: scale(1); 
+  }
+  50% { 
+    opacity: 0.6; 
+    transform: scale(1.1); 
+  }
+}
+
+@keyframes pulse-glow-delayed {
+  0%, 100% { 
+    opacity: 0.2; 
+    transform: scale(1); 
+  }
+  50% { 
+    opacity: 0.5; 
+    transform: scale(1.05); 
+  }
+}
+
+/* Floating animations */
+@keyframes float-landing {
+  0%, 100% { 
+    transform: translateY(0px); 
+  }
+  50% { 
+    transform: translateY(-20px); 
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg); 
+  }
+  50% { 
+    transform: translateY(-15px) rotate(5deg); 
+  }
+}
+
+@keyframes float-delayed {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg); 
+  }
+  50% { 
+    transform: translateY(-25px) rotate(-3deg); 
+  }
+}
+
+/* Animation classes */
+.landing-pulse-glow {
+  animation: pulse-glow-landing 4s ease-in-out infinite;
+}
+
+.landing-pulse-glow-delayed {
+  animation: pulse-glow-delayed 6s ease-in-out infinite;
+}
+
+.landing-float {
+  animation: float-landing 3s ease-in-out infinite;
+}
+
+.landing-float-slow {
+  animation: float-slow 5s ease-in-out infinite;
+}
+
+.landing-float-delayed {
+  animation: float-delayed 4s ease-in-out infinite;
+}
+
+/* Enhanced glow effects */
+.landing-glow-blue {
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, rgba(59, 130, 246, 0.1) 50%, transparent 70%);
+  filter: blur(80px);
+}
+
+.landing-glow-purple {
+  background: radial-gradient(circle, rgba(147, 51, 234, 0.4) 0%, rgba(147, 51, 234, 0.1) 50%, transparent 70%);
+  filter: blur(80px);
+}
+
+.landing-glow-green {
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.4) 0%, rgba(34, 197, 94, 0.1) 50%, transparent 70%);
+  filter: blur(80px);
+}
+
+.landing-glow-cyan {
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.4) 0%, rgba(6, 182, 212, 0.1) 50%, transparent 70%);
+  filter: blur(60px);
+}
+
+.landing-glow-pink {
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.4) 0%, rgba(236, 72, 153, 0.1) 50%, transparent 70%);
+  filter: blur(60px);
+}
+
+/* Floating icon styles */
+.landing-icon {
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+  text-shadow: 0 0 20px currentColor;
+}
+
+/* Grid pattern */
+.landing-grid {
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  opacity: 0.15;
+}
+
+/* Ensure animations are visible */
+.landing-bg-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -10;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.landing-bg-element {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform, opacity;
+}

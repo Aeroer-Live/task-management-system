@@ -1,0 +1,36 @@
+{
+  "name": "productivity-system",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
+    "start": "next start",
+    "lint": "eslint",
+    "deploy": "wrangler deploy",
+    "deploy:staging": "wrangler deploy --env staging",
+    "db:create": "wrangler d1 create productivity-system-db",
+    "db:migrate": "wrangler d1 execute productivity-system-db --file=./database/schema.sql",
+    "db:seed": "wrangler d1 execute productivity-system-db --file=./database/seed.sql",
+    "db:local": "wrangler d1 execute productivity-system-db --local --file=./database/schema.sql",
+    "db:local:seed": "wrangler d1 execute productivity-system-db --local --file=./database/seed.sql"
+  },
+  "dependencies": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "next": "15.5.4",
+    "itty-router": "^4.0.23"
+  },
+  "devDependencies": {
+    "typescript": "^5",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@tailwindcss/postcss": "^4",
+    "tailwindcss": "^4",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.4",
+    "@eslint/eslintrc": "^3",
+    "wrangler": "^3.78.12"
+  }
+}

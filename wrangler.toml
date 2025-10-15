@@ -1,0 +1,37 @@
+name = "productivity-system-api"
+main = "src/worker.ts"
+compatibility_date = "2024-01-15"
+
+[env.production]
+name = "productivity-system-api"
+
+[env.staging]
+name = "productivity-system-api-staging"
+
+# D1 Database
+[[d1_databases]]
+binding = "DB"
+database_name = "productivity-system-db"
+database_id = "d7192393-d4de-4ac1-93db-cb7ac926017a"
+
+# KV Storage for sessions and cache
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "b120f0e03d7f446eb2b2287446052ba8"
+
+[[kv_namespaces]]
+binding = "CACHE"
+id = "394d723349d545fbbc92f337417312ad"
+
+# R2 Storage for file uploads
+[[r2_buckets]]
+binding = "FILES"
+bucket_name = "productivity-system-files"
+
+# Environment variables
+[vars]
+JWT_SECRET = "b3d3d205f1297c41bf3528c588ef7c19f555c6a226d2f6124351ef1c38ecdfb43afa85cd0347dbf23bd48cd75c62bfa71d388fc79de5c378f88c94027b90eaf8"
+GOOGLE_CLIENT_ID = "your-google-client-id"
+GOOGLE_CLIENT_SECRET = "your-google-client-secret"
+GITHUB_CLIENT_ID = "your-github-client-id"
+GITHUB_CLIENT_SECRET = "your-github-client-secret"
