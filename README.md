@@ -1,4 +1,4 @@
-# ProductivityHub - Comprehensive Productivity Platform
+# Task Lab - Comprehensive Productivity Platform
 
 A modern, feature-rich productivity web system built with Next.js, TypeScript, and Tailwind CSS. Designed to help individuals and teams streamline their workflow with powerful task management, project boards, calendar integration, and time tracking.
 
