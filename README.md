@@ -160,8 +160,6 @@ productivity-system/
 
 ### Backend API (LIVE)
 The backend is deployed and running on Cloudflare Workers:
-- **API URL**: https://productivity-system-api.aeroermark.workers.dev
-- **Health Check**: https://productivity-system-api.aeroermark.workers.dev/health
 - **Database**: Cloudflare D1 with complete schema
 - **Authentication**: JWT-based with secure tokens
 
