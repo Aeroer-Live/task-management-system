@@ -1,8 +1,8 @@
 // API Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://productivity-system-api.aeroermark.workers.dev';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://productivity-system-api.wealthbeegroup.workers.dev';
 
 // Force the correct API URL for production
-const PRODUCTION_API_URL = 'https://productivity-system-api.aeroermark.workers.dev';
+const PRODUCTION_API_URL = 'https://productivity-system-api.wealthbeegroup.workers.dev';
 
 // Debug: Log the API URL to help with troubleshooting
 if (typeof window !== 'undefined') {
@@ -363,8 +363,9 @@ class ApiClient {
 
 // Create and export API client instance
 // Use production API URL for deployed version
-const finalApiUrl = typeof window !== 'undefined' && window.location.hostname.includes('pages.dev') 
-  ? PRODUCTION_API_URL 
+// Use the production API URL whenever not running on localhost
+const finalApiUrl = typeof window !== 'undefined' && !window.location.hostname.includes('localhost')
+  ? PRODUCTION_API_URL
   : API_BASE_URL;
 
 export const api = new ApiClient(finalApiUrl);

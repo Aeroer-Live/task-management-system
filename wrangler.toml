@@ -12,16 +12,16 @@ name = "productivity-system-api-staging"
 [[d1_databases]]
 binding = "DB"
 database_name = "productivity-system-db"
-database_id = "d7192393-d4de-4ac1-93db-cb7ac926017a"
+database_id = "09717556-6336-49d1-b539-711dbe39f144"
 
 # KV Storage for sessions and cache
 [[kv_namespaces]]
 binding = "SESSIONS"
-id = "b120f0e03d7f446eb2b2287446052ba8"
+id = "54d218e055cf4353ac6d4c0b38593a58"
 
 [[kv_namespaces]]
 binding = "CACHE"
-id = "394d723349d545fbbc92f337417312ad"
+id = "e5494adeced94c3795e3b408610ae817"
 
 # R2 Storage for file uploads
 [[r2_buckets]]

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProductivityHub - Developer Productivity Platform</title>
+    <link rel="stylesheet" href="landing.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <img src="TaskLab.png" alt="TaskLab Logo" width="32" height="32" style="vertical-align: middle; margin-right: 8px;">
+                Task-Lab
+            </a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <div class="nav-buttons">
+                <a href="/auth/login" class="btn-signin">Sign in</a>
+                <a href="/auth/signup" class="btn-signup">Sign up</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Background Animations -->
+    <div class="bg-container">
+        <div class="glow-orb blue"></div>
+        <div class="glow-orb purple"></div>
+        <div class="glow-orb green"></div>
+        <div class="glow-orb cyan"></div>
+        <div class="glow-orb pink"></div>
+        
+        <div class="floating-icon">&lt;/&gt;</div>
+        <div class="floating-icon">⚡</div>
+        <div class="floating-icon">🌐</div>
+        <div class="floating-icon">🚀</div>
+        <div class="floating-icon">💻</div>
+        <div class="floating-icon"></></div>
+        <div class="floating-icon">🎯</div>
+        <div class="floating-icon">֎</div>
+        <div class="floating-icon">🔗</div>
+        
+        <!-- Particle Container -->
+        <div id="particle-container"></div>
+        
+        <div class="grid-pattern"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>ProductivityHub</h1>
+            <p>The ultimate developer productivity platform. Manage tasks, track projects, and ship code faster with intelligent automation.</p>
+            <div class="hero-buttons">
+                <a href="/auth/signup" class="btn-primary">
+                    Start Building →
+                </a>
+                <a href="/dashboard" class="btn-outline">
+                    View Dashboard
+                </a>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number blue">15K+</div>
+                    <div class="stat-label">Tasks Completed</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number purple">2.5K+</div>
+                    <div class="stat-label">Active Projects</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number green">500+</div>
+                    <div class="stat-label">Happy Developers</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2>Everything you need to ship faster</h2>
+        <p>Powerful tools designed for modern development workflows</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">✅</div>
+                <h3>Smart Task Management</h3>
+                <p>Organize tasks with priority levels, due dates, and intelligent categorization. Perfect for both individual productivity and team collaboration.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📂</div>
+                <h3>Advanced Project Boards</h3>
+                <p>Manage developer and marketing projects with customizable Kanban boards. Track progress and maintain project visibility across your organization.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📅</div>
+                <h3>Intelligent Calendar</h3>
+                <p>Sync with Google Calendar, Outlook, and Apple Calendar. Schedule meetings, track deadlines, and get smart notifications.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⏱️</div>
+                <h3>Precision Time Tracking</h3>
+                <p>Track time spent on tasks and projects with detailed analytics. Generate reports and measure productivity insights.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔐</div>
+                <h3>Enterprise Security</h3>
+                <p>OAuth login, two-factor authentication, and enterprise-grade security. Full control over your data privacy with GDPR compliance.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <h3>Cloudflare-Powered</h3>
+                <p>Powered by Cloudflare's global edge network for lightning-fast performance. Built with Next.js and deployed on Cloudflare Pages.</p>
+            </div>
+        </div>
+    </section>
+
+    <script src="landing.js"></script>
+</body>
+</html>
