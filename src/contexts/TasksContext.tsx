@@ -34,7 +34,19 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     try {
       const response = await api.getTasks(filters);
       if (response.data) {
-        setTasks(response.data.tasks);
+        // Normalize snake_case fields from the DB to camelCase
+        const normalized = response.data.tasks.map((t: any) => ({
+          ...t,
+          dueDate: t.dueDate ?? t.due_date,
+          taskType: t.taskType ?? t.task_type ?? 'regular',
+          projectId: t.projectId ?? t.project_id,
+          projectName: t.projectName ?? t.project_name,
+          createdAt: t.createdAt ?? t.created_at,
+          updatedAt: t.updatedAt ?? t.updated_at,
+          completedAt: t.completedAt ?? t.completed_at,
+          tags: typeof t.tags === 'string' ? JSON.parse(t.tags || '[]') : (t.tags ?? []),
+        }));
+        setTasks(normalized);
       } else {
         setError(response.error || 'Failed to fetch tasks');
       }
@@ -51,7 +63,17 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     try {
       const response = await api.getProjects();
       if (response.data) {
-        setProjects(response.data.projects);
+        // Normalize snake_case fields from the DB to camelCase
+        const normalized = response.data.projects.map((p: any) => ({
+          ...p,
+          taskCount: p.taskCount ?? p.task_count ?? 0,
+          completedTasks: p.completedTasks ?? p.completed_tasks ?? 0,
+          startDate: p.startDate ?? p.start_date,
+          endDate: p.endDate ?? p.end_date,
+          createdAt: p.createdAt ?? p.created_at,
+          updatedAt: p.updatedAt ?? p.updated_at,
+        }));
+        setProjects(normalized);
       } else {
         setError(response.error || 'Failed to fetch projects');
       }

@@ -116,7 +116,7 @@ export default function DashboardHeader() {
                       {user?.name || 'User'}
                     </p>
                     <p className="text-xs" style={{ color: 'var(--color-fg-muted)' }}>
-                      {user?.email || 'user@example.com'}
+                      {user?.email}
                     </p>
                   </div>
                 </div>

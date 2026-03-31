@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c//**)",
+      "Read(//c/Don''''''''t Touch/Web-Projects/**)",
+      "Bash(npm install:*)"
+    ]
+  }
+}

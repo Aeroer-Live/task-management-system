@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///C:/Don%27t%20Touch/Web-Projects/task-management-system/src/app/page.tsx"],"sourcesContent":["'use client';\r\n\r\nimport { useEffect } from 'react';\r\n\r\nexport default function Home() {\r\n  useEffect(() => {\r\n    // Redirect to the pure HTML landing page\r\n    window.location.href = '/landing.html';\r\n  }, []);\r\n\r\n  return (\r\n    <div className=\"min-h-screen flex items-center justify-center\" style={{ background: 'var(--color-canvas-default)' }}>\r\n          <div className=\"text-center\">\r\n        <div className=\"animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4\"></div>\r\n        <p style={{ color: 'var(--color-fg-muted)' }}>Loading landing page...</p>\r\n        </div>\r\n    </div>\r\n  );\r\n}\r\n"],"names":[],"mappings":";;;;;AAEA;;;AAFA;;AAIe,SAAS;;IACtB,IAAA,0KAAS;0BAAC;YACR,yCAAyC;YACzC,OAAO,QAAQ,CAAC,IAAI,GAAG;QACzB;yBAAG,EAAE;IAEL,qBACE,6LAAC;QAAI,WAAU;QAAgD,OAAO;YAAE,YAAY;QAA8B;kBAC5G,cAAA,6LAAC;YAAI,WAAU;;8BACjB,6LAAC;oBAAI,WAAU;;;;;;8BACf,6LAAC;oBAAE,OAAO;wBAAE,OAAO;oBAAwB;8BAAG;;;;;;;;;;;;;;;;;AAItD;GAdwB;KAAA","debugId":null}}]
+}

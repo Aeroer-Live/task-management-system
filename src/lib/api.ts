@@ -91,11 +91,17 @@ class ApiClient {
 
   hasValidToken(): boolean {
     if (!this.token) return false;
-    
+
     try {
-      // Decode the token to check expiration
-      const tokenData = JSON.parse(atob(this.token));
-      if (tokenData.exp && Date.now() > tokenData.exp) {
+      // A JWT is header.payload.signature — decode only the payload segment
+      const parts = this.token.split('.');
+      if (parts.length !== 3) {
+        this.clearToken();
+        return false;
+      }
+      const tokenData = JSON.parse(atob(parts[1]));
+      // exp is in seconds; Date.now() is in milliseconds
+      if (tokenData.exp && Date.now() / 1000 > tokenData.exp) {
         this.clearToken();
         return false;
       }
@@ -318,6 +324,12 @@ class ApiClient {
   async markAllNotificationsAsRead() {
     return this.request('/api/notifications/read-all', {
       method: 'PUT',
+    });
+  }
+
+  async deleteNotification(id: string) {
+    return this.request(`/api/notifications/${id}`, {
+      method: 'DELETE',
     });
   }
 

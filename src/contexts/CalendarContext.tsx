@@ -1,8 +1,10 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useTasks } from './TasksContext';
 import { useProjects } from './ProjectsContext';
+import { api } from '@/lib/api';
+import { useAuth } from './AuthContext';
 
 export interface CalendarEvent {
   id: string;
@@ -11,7 +13,7 @@ export interface CalendarEvent {
   time?: string;
   type: 'task' | 'project' | 'meeting' | 'deadline' | 'milestone';
   source: 'task' | 'project' | 'manual';
-  sourceId?: string; // ID of the task or project
+  sourceId?: string;
   description?: string;
   priority?: 'low' | 'medium' | 'high' | 'urgent';
   status?: 'todo' | 'in-progress' | 'completed';
@@ -23,7 +25,7 @@ export interface CalendarEvent {
 
 interface CalendarContextType {
   events: CalendarEvent[];
-  addEvent: (event: Omit<CalendarEvent, 'id'>) => void;
+  addEvent: (event: Omit<CalendarEvent, 'id'>) => Promise<void>;
   updateEvent: (id: string, updates: Partial<CalendarEvent>) => void;
   deleteEvent: (id: string) => void;
   getEventsForDate: (date: Date) => CalendarEvent[];
@@ -37,32 +39,39 @@ interface CalendarContextType {
 const CalendarContext = createContext<CalendarContextType | undefined>(undefined);
 
 export function CalendarProvider({ children }: { children: ReactNode }) {
-  const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const { isAuthenticated } = useAuth();
   const { tasks } = useTasks();
   const { projects } = useProjects();
 
-  // Load events from localStorage on mount
+  // manualEvents are fetched from the API; derived events are computed in memory
+  const [manualEvents, setManualEvents] = useState<CalendarEvent[]>([]);
+  const [derivedEvents, setDerivedEvents] = useState<CalendarEvent[]>([]);
+
+  // Fetch manually created events from API on login
   useEffect(() => {
-    const savedEvents = localStorage.getItem('calendar-events');
-    if (savedEvents) {
-      try {
-        const parsedEvents = JSON.parse(savedEvents).map((event: any) => ({
-          ...event,
-          date: new Date(event.date)
-        }));
-        setEvents(parsedEvents);
-      } catch (error) {
-        console.error('Error loading calendar events:', error);
-      }
+    if (!isAuthenticated) {
+      setManualEvents([]);
+      return;
     }
-  }, []);
+    api.getCalendarEvents().then(response => {
+      if (response.data) {
+        const mapped: CalendarEvent[] = response.data.events.map((e: any) => ({
+          id: e.id,
+          title: e.title,
+          date: new Date(e.start_time || e.date),
+          time: e.time,
+          type: e.event_type || e.type || 'meeting',
+          source: 'manual' as const,
+          sourceId: e.source_id,
+          description: e.description,
+          isAllDay: Boolean(e.is_all_day),
+        }));
+        setManualEvents(mapped);
+      }
+    });
+  }, [isAuthenticated]);
 
-  // Save events to localStorage whenever events change
-  useEffect(() => {
-    localStorage.setItem('calendar-events', JSON.stringify(events));
-  }, [events]);
-
-  // Sync tasks to calendar events
+  // Derive task events from the tasks list
   const syncTasksToCalendar = () => {
     const taskEvents: CalendarEvent[] = tasks
       .filter(task => task.dueDate)
@@ -81,135 +90,131 @@ export function CalendarProvider({ children }: { children: ReactNode }) {
         isAllDay: false,
       }));
 
-    // Remove existing task events and add new ones
-    setEvents(prevEvents => {
-      const nonTaskEvents = prevEvents.filter(event => event.source !== 'task');
-      return [...nonTaskEvents, ...taskEvents];
+    setDerivedEvents(prev => {
+      const nonTask = prev.filter(e => e.source !== 'task');
+      return [...nonTask, ...taskEvents];
     });
   };
 
-  // Sync projects to calendar events
+  // Derive project milestone events from the projects list
   const syncProjectsToCalendar = () => {
     const projectEvents: CalendarEvent[] = projects
-      .filter(project => project.startDate || project.endDate)
-      .flatMap(project => {
-        const events: CalendarEvent[] = [];
-        
-        if (project.startDate) {
-          events.push({
-            id: `project-start-${project.id}`,
-            title: `Start: ${project.name}`,
-            date: new Date(project.startDate),
+      .filter(p => p.startDate || p.endDate)
+      .flatMap(p => {
+        const evts: CalendarEvent[] = [];
+        if (p.startDate) {
+          evts.push({
+            id: `project-start-${p.id}`,
+            title: `Start: ${p.name}`,
+            date: new Date(p.startDate),
             type: 'milestone' as const,
             source: 'project' as const,
-            sourceId: project.id,
-            description: project.description,
-            projectType: project.type,
+            sourceId: p.id,
+            description: p.description,
+            projectType: p.type as 'developer' | 'marketing',
             isAllDay: true,
           });
         }
-        
-        if (project.endDate) {
-          events.push({
-            id: `project-end-${project.id}`,
-            title: `End: ${project.name}`,
-            date: new Date(project.endDate),
+        if (p.endDate) {
+          evts.push({
+            id: `project-end-${p.id}`,
+            title: `End: ${p.name}`,
+            date: new Date(p.endDate),
             type: 'deadline' as const,
             source: 'project' as const,
-            sourceId: project.id,
-            description: project.description,
-            projectType: project.type,
+            sourceId: p.id,
+            description: p.description,
+            projectType: p.type as 'developer' | 'marketing',
             isAllDay: true,
           });
         }
-        
-        return events;
+        return evts;
       });
 
-    // Remove existing project events and add new ones
-    setEvents(prevEvents => {
-      const nonProjectEvents = prevEvents.filter(event => event.source !== 'project');
-      return [...nonProjectEvents, ...projectEvents];
+    setDerivedEvents(prev => {
+      const nonProject = prev.filter(e => e.source !== 'project');
+      return [...nonProject, ...projectEvents];
     });
   };
 
-  // Sync all data to calendar
   const syncAllToCalendar = () => {
     syncTasksToCalendar();
     syncProjectsToCalendar();
   };
 
-  // Auto-sync when tasks or projects change
+  // Auto-sync derived events when tasks or projects change
   useEffect(() => {
     syncAllToCalendar();
   }, [tasks, projects]);
 
-  // Add a new event
-  const addEvent = (eventData: Omit<CalendarEvent, 'id'>) => {
-    const newEvent: CalendarEvent = {
-      ...eventData,
-      id: `manual-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-    };
-    setEvents(prevEvents => [...prevEvents, newEvent]);
+  // Merged view: manual events + derived events (manual takes precedence by id)
+  const events = [...derivedEvents, ...manualEvents];
+
+  const addEvent = async (eventData: Omit<CalendarEvent, 'id'>) => {
+    const response = await api.createCalendarEvent({
+      title: eventData.title,
+      start_time: eventData.date.toISOString(),
+      event_type: eventData.type,
+      description: eventData.description,
+      is_all_day: eventData.isAllDay,
+      time: eventData.time,
+    });
+
+    if (response.data) {
+      const newEvent: CalendarEvent = {
+        ...eventData,
+        id: response.data.eventId,
+      };
+      setManualEvents(prev => [...prev, newEvent]);
+    }
   };
 
-  // Update an existing event
   const updateEvent = (id: string, updates: Partial<CalendarEvent>) => {
-    setEvents(prevEvents =>
-      prevEvents.map(event =>
-        event.id === id ? { ...event, ...updates } : event
-      )
+    setManualEvents(prev =>
+      prev.map(e => e.id === id ? { ...e, ...updates } : e)
     );
   };
 
-  // Delete an event
   const deleteEvent = (id: string) => {
-    setEvents(prevEvents => prevEvents.filter(event => event.id !== id));
+    setManualEvents(prev => prev.filter(e => e.id !== id));
   };
 
-  // Get events for a specific date
   const getEventsForDate = (date: Date) => {
-    return events.filter(event => {
-      const eventDate = event.date;
-      return eventDate.getDate() === date.getDate() &&
-             eventDate.getMonth() === date.getMonth() &&
-             eventDate.getFullYear() === date.getFullYear();
-    });
+    return events.filter(e =>
+      e.date.getDate() === date.getDate() &&
+      e.date.getMonth() === date.getMonth() &&
+      e.date.getFullYear() === date.getFullYear()
+    );
   };
 
-  // Get events for a specific month
   const getEventsForMonth = (date: Date) => {
-    return events.filter(event => {
-      const eventDate = event.date;
-      return eventDate.getMonth() === date.getMonth() &&
-             eventDate.getFullYear() === date.getFullYear();
-    });
+    return events.filter(e =>
+      e.date.getMonth() === date.getMonth() &&
+      e.date.getFullYear() === date.getFullYear()
+    );
   };
 
-  // Get upcoming events
   const getUpcomingEvents = (limit: number = 10) => {
     const now = new Date();
     return events
-      .filter(event => event.date >= now)
+      .filter(e => e.date >= now)
       .sort((a, b) => a.date.getTime() - b.date.getTime())
       .slice(0, limit);
   };
 
-  const value: CalendarContextType = {
-    events,
-    addEvent,
-    updateEvent,
-    deleteEvent,
-    getEventsForDate,
-    getEventsForMonth,
-    getUpcomingEvents,
-    syncTasksToCalendar,
-    syncProjectsToCalendar,
-    syncAllToCalendar,
-  };
-
   return (
-    <CalendarContext.Provider value={value}>
+    <CalendarContext.Provider value={{
+      events,
+      addEvent,
+      updateEvent,
+      deleteEvent,
+      getEventsForDate,
+      getEventsForMonth,
+      getUpcomingEvents,
+      syncTasksToCalendar,
+      syncProjectsToCalendar,
+      syncAllToCalendar,
+    }}>
       {children}
     </CalendarContext.Provider>
   );

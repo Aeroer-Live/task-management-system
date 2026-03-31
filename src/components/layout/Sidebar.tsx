@@ -168,7 +168,7 @@ export default function Sidebar() {
               {user?.name || 'User Name'}
             </p>
             <p className="text-xs truncate" style={{ color: 'var(--color-fg-muted)' }}>
-              {user?.email || 'user@example.com'}
+              {user?.email}
             </p>
           </div>
         </div>

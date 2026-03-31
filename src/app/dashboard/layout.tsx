@@ -1,3 +1,8 @@
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import Sidebar from '@/components/layout/Sidebar';
 import DashboardHeader from '@/components/layout/DashboardHeader';
 
@@ -6,6 +11,20 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { isAuthenticated, isLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.replace('/auth/login');
+    }
+  }, [isAuthenticated, isLoading, router]);
+
+  // Don't render the dashboard until auth state is resolved
+  if (isLoading || !isAuthenticated) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen" style={{ background: 'var(--color-canvas-subtle)' }}>
       <Sidebar />
@@ -18,4 +37,3 @@ export default function DashboardLayout({
     </div>
   );
 }
-
